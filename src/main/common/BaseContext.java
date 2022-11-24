@@ -1,13 +1,15 @@
 package main.common;
 
-import main.dao.HashTab;
+import main.dao.userHelper.HashTab;
 
 public class BaseContext {
-    private static ThreadLocal<HashTab> threadLocal = new ThreadLocal<>();
-    public static HashTab getCurrent(){
-        return threadLocal.get();
+    private static HashTab hashTab ;
+
+    public static HashTab getHashTab() {
+        return hashTab;
     }
-    public static void setCurrent(HashTab hashTab){
-        threadLocal.set(hashTab);
+
+    public static void setHashTab(HashTab hashTab) {
+        BaseContext.hashTab = hashTab;
     }
 }

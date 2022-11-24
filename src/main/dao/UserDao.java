@@ -1,6 +1,7 @@
 package main.dao;
 
 import main.common.BaseContext;
+import main.dao.userHelper.HashTab;
 
 import java.io.*;
 
@@ -16,7 +17,7 @@ public class UserDao {
                         new FileOutputStream(new File("./resources/users.txt"))
                 )
         );
-        HashTab hashTab = BaseContext.getCurrent();
+        HashTab hashTab = BaseContext.getHashTab();
         oos.writeObject(hashTab);
         oos.flush();
         oos.close();
@@ -35,7 +36,8 @@ public class UserDao {
                 )
         );
         HashTab hashTab= (HashTab) ois.readObject();
-        BaseContext.setCurrent(hashTab);
+        hashTab.list();
+        BaseContext.setHashTab(hashTab);
         ois.close();
     }
 }
