@@ -9,7 +9,7 @@ import java.io.*;
 
 public class testDao {
     @Test
-    public void testDump() throws IOException {
+    public void testDump() throws IOException, ClassNotFoundException {
         UserDao userDao = new UserDao();
         userDao.dump();
     }
@@ -30,7 +30,7 @@ public class testDao {
         hashTab.add(new Person("fdbdf","123456"));
         hashTab.add(new Person("uyk,","123456"));
         ObjectOutputStream oos = new ObjectOutputStream(
-                new BufferedOutputStream(new FileOutputStream(new File("./resources/users.txt")))
+                new BufferedOutputStream(new FileOutputStream(new File("./resources/users.bin")))
         );
         oos.writeObject(hashTab);
         oos.flush();

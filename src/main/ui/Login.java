@@ -21,8 +21,7 @@ public class Login {
 
     private UserController userController = new UserController();
     public Login() throws IOException, ClassNotFoundException {
-        //初始化userController
-        userController.load();
+
         //设置窗体的位置及大小
         frame.setSize(600,500);
         frame.setLocationRelativeTo(null);//在屏幕中居中显示
@@ -57,7 +56,12 @@ public class Login {
                 String password = passText.getText();
                 Person person = new Person(account,password);
                 System.out.println(person);
-                R r = userController.login(person);
+                R r = null;
+                try {
+                    r = userController.login(person);
+                } catch (IOException | ClassNotFoundException ioException) {
+                    ioException.printStackTrace();
+                }
                 //登录成功
                 if(r.getCode() == 1){
                     //TODO:进入新界面
@@ -86,11 +90,19 @@ public class Login {
             public void actionPerformed(ActionEvent e) {
                 Person person = new Person(userText.getText(), passText.getText());
                 try {
-                    userController.register(person);
-                } catch (IOException ioException) {
+                    R r= userController.register(person);
+                    if(r.getMsg().equals("禁止注册超级管理员")){
+                        //TODO:禁止注册超级管理员
+                        System.out.println("禁止注册超级管理员");
+                    }else if(r.getMsg().equals("该用户已经被注册")){
+                        //TODO:该用户已经被注册
+                        System.out.println("该用户已经被注册");
+                    }else{
+                        //TODO：注册成功
+                        System.out.println("注册成功");
+                    }
+                } catch (IOException | ClassNotFoundException ioException) {
                     ioException.printStackTrace();
-                } catch (ClassNotFoundException classNotFoundException) {
-                    classNotFoundException.printStackTrace();
                 }
             }
         });

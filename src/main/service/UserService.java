@@ -9,31 +9,23 @@ import main.entity.Person;
 import java.io.IOException;
 
 public class UserService {
-    private UserDao userDao = new UserDao();
-
-    //从磁盘读取用户
-    public void load() throws IOException, ClassNotFoundException {
-        userDao.load();
-    }
-    //将用户写入磁盘
-    public void dump() throws IOException {
-        userDao.dump();
-    }
+    private UserDao userDao =new UserDao() ;
 
     public R register(Person person) throws IOException, ClassNotFoundException {
+        userDao.load();
         //如果已经有该account注册的用户，返回false
-        HashTab hashTab = BaseContext.getHashTab();
-        if(hashTab.findPerByAc(person.account) != null){
+        if(userDao.query(person.account) != null){
             return R.error("该用户已经被注册");
         }
         //添加用户
-        hashTab.add(person);
+        userDao.add(person);
+        userDao.dump();
         return R.success();
     }
 
-    public R login(Person person){
-        HashTab hashTab = BaseContext.getHashTab();
-        Person personChecked = hashTab.findPerByAc(person.account);
+    public R login(Person person) throws IOException, ClassNotFoundException {
+        userDao.load();
+        Person personChecked = userDao.query(person.account);
         //先查看是否该用户
         if(personChecked == null){
             return R.error("没有此用户");

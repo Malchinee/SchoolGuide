@@ -10,18 +10,12 @@ public class UserController {
     private UserService userService = new UserService();
 
     public R register(Person person) throws IOException, ClassNotFoundException {
-        if(person.account == "root") return R.error("禁止注册超级管理员");
+        if(person.account .equals("root")) return R.error("禁止注册超级管理员");
         return userService.register(person);
     }
 
-    public R login(Person person){
+    public R login(Person person) throws IOException, ClassNotFoundException {
         return userService.login(person);
     }
 
-    public void load() throws IOException, ClassNotFoundException {
-        userService.load();
-    }
-    public void dump() throws IOException {
-        userService.dump();
-    }
 }
