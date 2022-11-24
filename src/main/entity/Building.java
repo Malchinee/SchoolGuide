@@ -8,7 +8,7 @@ public class Building implements Serializable {
     //景点描述
     private String message;
     //景点编号
-    private int no;
+    private final int no;
 
     public Building(String buildName, String message, int no) {
         this.buildName = buildName;
@@ -34,6 +34,15 @@ public class Building implements Serializable {
 
     public int getNo() {
         return no;
+    }
+
+    @Override
+    public String toString() {
+        return "Building{" +
+                "buildName='" + buildName + '\'' +
+                ", message='" + message + '\'' +
+                ", no=" + no +
+                '}';
     }
 }
 

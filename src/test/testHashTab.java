@@ -23,7 +23,7 @@ public class testHashTab {
     @Test
     public void testDump() throws IOException {
        ObjectOutputStream oos = new ObjectOutputStream(
-               new BufferedOutputStream(new FileOutputStream(new File("./test.txt")))
+               new BufferedOutputStream(new FileOutputStream(new File("./resources/users.bin")))
        );
         HashTab hashTab = new HashTab(26);
         hashTab.add(new Person("root","123456"));
@@ -40,7 +40,7 @@ public class testHashTab {
     @Test
     public void testLoad() throws IOException, ClassNotFoundException {
         ObjectInputStream ois = new ObjectInputStream(
-                new BufferedInputStream(new FileInputStream(new File("./test.txt")))
+                new BufferedInputStream(new FileInputStream(new File("./resources/users.bin")))
         );
         HashTab hashTab =(HashTab) ois.readObject();
         ois.close();
