@@ -16,4 +16,12 @@ public class R<T> {
         r.msg = msg;
         return r;
     }
+
+    public Integer getCode() {
+        return code;
+    }
+
+    public String getMsg() {
+        return msg;
+    }
 }

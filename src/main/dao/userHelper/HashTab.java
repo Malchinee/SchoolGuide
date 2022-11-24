@@ -1,4 +1,4 @@
-package main.dao;
+package main.dao.userHelper;
 
 import main.entity.Person;
 
@@ -36,7 +36,7 @@ public class HashTab implements Serializable {
      * @return
      */
     public Person findPerByAc(String account){
-        int perLinkedListNo = hashFun(account)-'a';
+        int perLinkedListNo = hashFun(account);
         Person per = perLinkedLists[perLinkedListNo].findPerById(account);
         return per;
     }
@@ -46,7 +46,7 @@ public class HashTab implements Serializable {
      */
     public void add(Person per){
         //得到第几条链
-        int perLinkedListNo = hashFun(per.account)-'a';
+        int perLinkedListNo = hashFun(per.account);
         //将这个人添加
         perLinkedLists[perLinkedListNo].add(per);
     }
@@ -56,9 +56,9 @@ public class HashTab implements Serializable {
      * @param account
      * @return
      */
-    private char hashFun(String account){
+    private int hashFun(String account){
         //取出首字母
         account=account.toLowerCase();
-        return account.charAt(0);
+        return account.charAt(0)-'a';
     }
 }

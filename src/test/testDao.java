@@ -1,8 +1,7 @@
 package test;
 
-import main.common.BaseContext;
 import main.dao.UserDao;
-import main.dao.HashTab;
+import main.dao.userHelper.HashTab;
 import main.entity.Person;
 import org.junit.Test;
 
@@ -36,7 +35,5 @@ public class testDao {
         oos.writeObject(hashTab);
         oos.flush();
         oos.close();
-        BaseContext.setCurrent(hashTab);
-        BaseContext.getCurrent().list();
     }
 }

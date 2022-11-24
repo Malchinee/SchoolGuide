@@ -1,4 +1,4 @@
-package main.dao;
+package main.dao.userHelper;
 
 import main.entity.Person;
 
@@ -38,7 +38,7 @@ public class PerLinkedList implements Serializable {
         Person temp = head;
         boolean flag = false;
         while(temp != null){
-            if(temp.account == account){
+            if(temp.account.equals(account)){
                 flag = true;
                 break;
             }
