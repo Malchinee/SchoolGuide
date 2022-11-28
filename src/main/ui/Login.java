@@ -49,6 +49,7 @@ public class Login {
         panel.add(passText);
         //创建登陆注册按钮
         loginButton.setBounds(60,200,80,25);
+        //登录按钮逻辑
         loginButton.addActionListener(new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -85,6 +86,7 @@ public class Login {
         });
         panel.add(loginButton);
         registerButton.setBounds(220,200,80,25);
+        //注册按钮逻辑
         registerButton.addActionListener(new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {

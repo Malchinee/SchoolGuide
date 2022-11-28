@@ -1,9 +1,7 @@
 package main.service;
 
-import main.common.BaseContext;
 import main.common.R;
 import main.dao.UserDao;
-import main.dao.userHelper.HashTab;
 import main.entity.Person;
 
 import java.io.IOException;

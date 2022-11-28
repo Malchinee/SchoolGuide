@@ -1,6 +1,5 @@
 package main.dao;
 
-import main.common.BaseContext;
 import main.dao.userHelper.HashTab;
 import main.entity.Person;
 

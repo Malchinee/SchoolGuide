@@ -1,8 +1,7 @@
 package test;
 
-import main.common.BaseContext;
+import main.controller.BuildController;
 import main.dao.BuildDao;
-import main.dao.UserDao;
 import main.dao.buildHelper.Graph;
 import main.entity.Building;
 import org.junit.Test;
@@ -51,8 +50,9 @@ public class testGraph {
         graph.list();
     }
 
+
     @Test
-    public void testDump() throws IOException, ClassNotFoundException {
+    public void edgeHelper() throws IOException, ClassNotFoundException {
         List<Building> list = new ArrayList<>();
         list.add( new Building("1公寓(怡海楼)","男生公寓",1));
         list.add (new Building("2公寓(安海楼)","女生公寓",2));
@@ -87,26 +87,62 @@ public class testGraph {
         list.add (new Building("研究院","实验室、机房、研究生院",31));
         list.add (new Building("菜鸟驿站","快递点",32));
         Graph graph = new Graph(list);
-        BaseContext.setGraph(graph);
-        Graph graph1 = BaseContext.getGraph();
-        graph1.list();
         BuildDao buildDao = new BuildDao();
+        BuildDao.setGraph(graph);
+        buildDao.add(1,3,50);
+        buildDao.add(1,5,30);
+        buildDao.add(1,23,100);
+        buildDao.add(2,3,100);
+        buildDao.add(2,28,20);
+        buildDao.add(2,5,40);
+        buildDao.add(2,7,50);
+        buildDao.add(3,4,50);
+        buildDao.add(3,7,100);
+        buildDao.add(4,8,200);
+        buildDao.add(4,23,50);
+        buildDao.add(4,6,100);
+        buildDao.add(5,15,50);
+        buildDao.add(5,28,50);
+        buildDao.add(6,8,100);
+        buildDao.add(6,9,150);
+        buildDao.add(6,12,300);
+        buildDao.add(6,23,200);
+        buildDao.add(6,24,120);
+        buildDao.add(6,32,30);
+        buildDao.add(7,28,100);
+        buildDao.add(8,9,30);
+        buildDao.add(9,10,30);
+        buildDao.add(9,22,300);
+        buildDao.add(9,24,50);
+        buildDao.add(9,26,300);
+        buildDao.add(10,11,30);
+        buildDao.add(10,22,270);
+        buildDao.add(12,13,50);
+        buildDao.add(12,14,500);
+        buildDao.add(12,27,300);
+        buildDao.add(13,27,250);
+        buildDao.add(14,19,70);
+        buildDao.add(15,28,30);
+        buildDao.add(15,20,40);
+        buildDao.add(15,21,50);
+        buildDao.add(16,17,30);
+        buildDao.add(16,18,50);
+        buildDao.add(16,19,100);
+        buildDao.add(16,30,120);
+        buildDao.add(17,31,100);
+        buildDao.add(19,30,30);
+        buildDao.add(19,21,70);
+        buildDao.add(20,21,30);
+        buildDao.add(20,28,40);
+        buildDao.add(20,29,80);
+        buildDao.add(21,29,70);
+        buildDao.add(22,26,30);
+        buildDao.add(22,25,100);
+        buildDao.add(24,32,10);
+        buildDao.add(25,26,100);
         buildDao.dump();
-    }
-    @Test
-    public void testLoad() throws IOException, ClassNotFoundException {
-        BuildDao  buildDao = new BuildDao();
-        buildDao.load();
-        Graph  graph = BaseContext.getGraph();
+        BuildDao.setGraph(graph);
         graph.list();
-    }
 
-    @Test
-    public void testAdd() throws IOException, ClassNotFoundException {
-        BuildDao  buildDao = new BuildDao();
-        buildDao.load();
-        Graph  graph = BaseContext.getGraph();
-        graph.addEdge(1,3,50);
-        graph.list();
     }
 }
