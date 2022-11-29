@@ -5,9 +5,10 @@ public class R<T> {
 
     private String msg;//错误信息
 
-    public static <T> R<T> success(){
+    public static <T> R<T> success(String msg){
         R<T> r = new R<T>();
         r.code = 1;
+        r.msg = msg;
         return r;
     }
     public static <T> R<T> error(String msg){

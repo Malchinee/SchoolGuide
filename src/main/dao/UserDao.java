@@ -34,7 +34,6 @@ public class UserDao {
                 )
         );
         hashTab = (HashTab) ois.readObject();
-        hashTab.list();
         ois.close();
     }
 
@@ -55,5 +54,13 @@ public class UserDao {
      */
     public Person query(String account) {
         return hashTab.findPerByAc(account);
+    }
+
+    public static HashTab getHashTab() {
+        return hashTab;
+    }
+
+    public static void setHashTab(HashTab hashTab) {
+        UserDao.hashTab = hashTab;
     }
 }

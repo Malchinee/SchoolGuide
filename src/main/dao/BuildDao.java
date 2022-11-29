@@ -2,6 +2,7 @@ package main.dao;
 
 import main.common.R;
 import main.dao.buildHelper.Graph;
+import main.entity.Building;
 
 import java.io.*;
 
@@ -47,6 +48,19 @@ public class BuildDao {
      */
     public R add(int vex1,int vex2,int weight){
         graph.addEdge(vex1,vex2,weight);
-        return R.success();
+        return R.success("添加成功");
+    }
+
+    public Building query(int num){
+        return graph.getBuild(num);
+    }
+
+    public R updateBuildMsg(int num,String newMsg){
+        graph.updateMsg(num,newMsg);
+        return R.success("更新成功");
+    }
+
+    public R queryMinPath(int sNum, int eNum){
+        return R.success(graph.Shortpath_Print(sNum,eNum));
     }
 }

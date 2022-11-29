@@ -18,7 +18,7 @@ public class UserService {
         //添加用户
         userDao.add(person);
         userDao.dump();
-        return R.success();
+        return R.success("注册成功");
     }
 
     public R login(Person person) throws IOException, ClassNotFoundException {
@@ -32,6 +32,8 @@ public class UserService {
         if(!personChecked.password.equals(person.password)){
             return R.error("密码错误");
         }
-        return R.success();
+        return R.success("登录成功");
     }
+
+
 }
