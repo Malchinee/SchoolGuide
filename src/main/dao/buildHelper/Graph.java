@@ -1,5 +1,6 @@
 package main.dao.buildHelper;
 
+import main.common.R;
 import main.entity.Building;
 
 import java.io.Serializable;
@@ -10,6 +11,20 @@ import java.util.Scanner;
 public class Graph implements Serializable {
     private Building[] buildings;
     private int [][] edges;
+
+    private String routeInfo;
+
+    public void resetRouteInfo(){
+        routeInfo = new String("");
+    }
+
+    public String getRouteInfo() {
+        return routeInfo;
+    }
+
+    public void setRouteInfo(String routeInfo) {
+        this.routeInfo = routeInfo;
+    }
 
     /**
      * 构造函数
@@ -66,37 +81,35 @@ public class Graph implements Serializable {
      * @param sNum
      * @param eNum
      */
-    public void Floyd_Print(int sNum, int eNum) {
+    public String Floyd_Print(int sNum, int eNum) {
+        String a = new String();
         if (path[sNum][eNum] == INFINALITY || path[sNum][eNum] == eNum || path[sNum][eNum] == sNum)
-            return;
+            return a;
         else {
-            Floyd_Print(sNum, path[sNum][eNum]);                 /*将中间点作为终点继续打印路径*/
-            System.out.println(getBuildings()[path[sNum][eNum]].getBuildName()+"->");         /*打印中间景点名字*/
-            Floyd_Print(path[sNum][eNum], eNum);                 /*将中间点作为起点继续打印路径*/
+            String b = Floyd_Print(sNum, path[sNum][eNum]);                 /*将中间点作为终点继续打印路径*/
+            //System.out.println(getBuildings()[path[sNum][eNum]].getBuildName()+"->");         /*打印中间景点名字*/
+            a = (getBuildings()[path[sNum][eNum]].getBuildName()+"->");
+            String c = Floyd_Print(path[sNum][eNum], eNum);                 /*将中间点作为起点继续打印路径*/
+            return b+a+c;
         }
     }
 
     /**
      * 输出并打印两点间的最短路径
      */
-    public void Shortpath_Print() {
-        int sNum, eNum;                                             /*起点编号，终点编号*/
-        do {
-            System.out.println("请输入起点编号：");
-            Scanner scanner = new Scanner(System.in);
-            sNum = scanner.nextInt();
+    public String Shortpath_Print(int sNum,int eNum) {
+        resetRouteInfo();
 
-        } while (sNum <= 0 || sNum > getBuildingsNum());
-        do {
-            System.out.println("请输入终点编号：");
-            Scanner scanner = new Scanner(System.in);
-            eNum = scanner.nextInt();
-        } while (eNum <= 0 || eNum > getBuildingsNum());
-        System.out.println(getBuildings()[--sNum].getBuildName()+"到"+getBuildings()[--eNum].getBuildName()+"的最短距离是:"+ dist[sNum][eNum]);
-        System.out.println("这是最佳游览路线：");
-        System.out.println(getBuildings()[sNum].getBuildName()+"->");                                       /*输出路径上的起点*/
-        Floyd_Print(sNum, eNum);                                               /*输出路径上的中间点*/
-        System.out.println(getBuildings()[eNum].getBuildName());                                     /*输出路径上的终点*/
+        routeInfo = routeInfo+(getBuildings()[--sNum].getBuildName()+"到"+getBuildings()[--eNum].getBuildName()+"的最短距离是:"+ dist[sNum][eNum]+"\n");
+        routeInfo = routeInfo+"这是最佳游览路线：\n";
+        routeInfo = routeInfo+(getBuildings()[sNum].getBuildName()+"->");
+
+        //System.out.println(getBuildings()[sNum].getBuildName()+"->");                                       /*输出路径上的起点*/
+        routeInfo = routeInfo+Floyd_Print(sNum, eNum);                                               /*输出路径上的中间点*/
+        routeInfo = routeInfo+(getBuildings()[eNum].getBuildName());
+        //System.out.println(getBuildings()[eNum].getBuildName());                                     /*输出路径上的终点*/
+
+        return routeInfo;
     }
     //------------------------------------------------------------------------
     /**
@@ -108,8 +121,8 @@ public class Graph implements Serializable {
     public int top = 0;                                                                    /*路径计数器*/
     public int count = 1;
 
-    void Dfs_Print( int sNum, int eNum) {
-
+    public String Dfs_Print( int sNum, int eNum) {
+        resetRouteInfo();
         int dis = 0;                                                              /*用于记录路径长度*/
         pathStack[top++] = sNum;                                                    /*将本趟起点入栈*/
         visited[sNum] = 1;                                                        /*将入栈点标记为已入栈*/
@@ -117,29 +130,35 @@ public class Graph implements Serializable {
             if (getEdges()[sNum][i] != INFINALITY && visited[i] != 1) {
                 /*表明前一个入栈点与该点可达，且该点未入栈（未被访问）*/
                 if (i == eNum) {                                                  /*如果深度遍历搜到了终点，就输出刚才的路径*/
-                    System.out.println("第"+(count++)+"条路:");
+                    //System.out.println("第"+(count++)+"条路:");
+                    routeInfo = routeInfo+("第"+(count++)+"条路:")+"\n";
                     for (int j = 0; j < top; j++) {
-                        System.out.println(getBuildings()[pathStack[j]].getBuildName()+"->");
+                        //System.out.println(getBuildings()[pathStack[j]].getBuildName()+"->");
+                        routeInfo = routeInfo+(getBuildings()[pathStack[j]].getBuildName()+"->");
                         if (j < top - 1)
                             dis = dis + getEdges()[pathStack[j]][pathStack[j + 1]];        /*统计路径长度*/
                     }
                     dis = dis + getEdges()[pathStack[top - 1]][eNum];                      /*最后一条路单独出来，因为enum不能入栈*/
-                    System.out.println( getBuildings()[eNum].getBuildName());
-                    System.out.println("总长度是："+ dis);
+                    routeInfo = routeInfo+( getBuildings()[eNum].getBuildName())+"\n";
+                    routeInfo = routeInfo+("总长度是："+ dis+"\n");
+                    //System.out.println( getBuildings()[eNum].getBuildName());
+                    //System.out.println("总长度是："+ dis);
                 }
                 else {
-                    Dfs_Print(i, eNum);                                              /*如果该点不是终点,接着深度搜索*/
+                    routeInfo = routeInfo + Dfs_Print(i, eNum);                                              /*如果该点不是终点,接着深度搜索*/
                     top--;                                                              /*支路全被访问一遍后，顶点出栈*/
                     visited[i] = 0;                                                     /*将出栈点标记为已出栈，允许下次访问*/
                 }
             }
         }
+        return routeInfo;
     }
 
     /**
      * 查询任意两个景点之间的所有路径并打印
      */
-    public void Allpath_Print() {
+    public String Allpath_Print() {
+        resetRouteInfo();
         int sNum, eNum;
         count = 1;                                                       /*路径计数器*/
         top = 0;                                                         /*栈顶*/
@@ -153,13 +172,15 @@ public class Graph implements Serializable {
             Scanner scanner = new Scanner(System.in);
             eNum = scanner.nextInt();
         } while (eNum <= 0 || eNum > getBuildingsNum());
-        Dfs_Print(sNum - 1, eNum - 1);
+        routeInfo = routeInfo + Dfs_Print(sNum - 1, eNum - 1);
+        return routeInfo;
     }
 
     /**
      * 多景点间求最佳路径
      */
-    void BestPath() {
+    public String BestPath() {
+        resetRouteInfo();
         ShortPath();
         int vNum[] = new int[getBuildingsNum()], j = 1;                                       /*记录用户输入的编号信息*/
         int d = 0;                                                        /*统计全程总长*/
@@ -169,36 +190,49 @@ public class Graph implements Serializable {
         do {
             System.out.println("请输入你要游览的第1个景点的编号（输入-1结束输入）：");
             vNum[j-1] = scanner.nextInt();
-        } while ((vNum[j-1] <= 0 || vNum[j-1] > getBuildingsNum())&&vNum[j-1] != -1);
-        if (vNum[j - 1] == -1) return;
+        } while ((vNum[j-1] <= 0 || vNum[j-1] > getBuildingsNum())&&vNum[j-1] != -1 || judgeInput(vNum, j));
+        if (vNum[j - 1] == -1) return"";
         j++;
         while ( j <= getBuildingsNum() && vNum[j - 1] != -1) {
             //while (vNum[j - 1] > 0 && vNum[j-1] <= getBuildingsNum()) {
             do {
                 System.out.println("请输入你要游览的第"+j+"个景点的编号（输入-1结束输入）：");
                 vNum[j-1] = scanner.nextInt();
-            } while ((vNum[j-1] <= 0 || vNum[j-1] > getBuildingsNum()) && vNum[j-1] != -1);
+            } while ((vNum[j-1] <= 0 || vNum[j-1] > getBuildingsNum()) && vNum[j-1] != -1 || judgeInput(vNum, j));
 
             //}
             if (vNum[j - 1] == -1) break;
             if(j == getBuildingsNum()) break;
             ++j;
         }
-        System.out.println("这是最佳访问路径：");
+        routeInfo = routeInfo + ("这是最佳访问路径："+"\n");
+        //System.out.println("这是最佳访问路径：");
         int i = 0;
         for (;(i+1) < getBuildingsNum() && vNum[i] > 0 && vNum[i + 1] > 0; i++) {
-            System.out.println(getBuildings()[vNum[i] - 1].getBuildName()+"->");                   /*输出路径上的起点*/
-            Floyd_Print(vNum[i] - 1, vNum[i + 1] - 1);                /*利用Floyd算法*/
+            routeInfo = routeInfo + (getBuildings()[vNum[i] - 1].getBuildName()+"->");
+            //System.out.println(getBuildings()[vNum[i] - 1].getBuildName()+"->");                   /*输出路径上的起点*/
+            String b = Floyd_Print(vNum[i] - 1, vNum[i + 1] - 1);                /*利用Floyd算法*/
+            routeInfo = routeInfo+b;
             d += dist[vNum[i] - 1][vNum[i + 1] - 1];
         }
         if(i+1 != getBuildingsNum())
-            System.out.println(getBuildings()[vNum[j - 2] - 1].getBuildName());                 /*输出路径上的终点*/
+            routeInfo = routeInfo+(getBuildings()[vNum[j - 2] - 1].getBuildName());
+            //System.out.println(getBuildings()[vNum[j - 2] - 1].getBuildName());                 /*输出路径上的终点*/
         else
-            System.out.println(getBuildings()[vNum[j-1]-1].getBuildName());
-        System.out.println("全程总长为："+ d);
+            routeInfo = routeInfo+(getBuildings()[vNum[j-1]-1].getBuildName());
+        //System.out.println(getBuildings()[vNum[j-1]-1].getBuildName());
+        routeInfo = routeInfo+("\n"+"全程总长为："+ d);
+        //System.out.println("全程总长为："+ d);
+        return routeInfo;
     }
 
-
+    public boolean judgeInput(int[] a, int nums){
+        for(int i = 0; i < nums-1; i++){
+            if(a[i] == a[nums-1])
+                return true;
+        }
+        return false;
+    }
 
 
     public Building[] getBuildings() {
@@ -256,6 +290,14 @@ public class Graph implements Serializable {
         edges[vex1][vex2] = weight;
         edges[vex2][vex1] = weight;
 
+    }
+    
+    public Building getBuild(int num){
+        return buildings[num];
+    }
+
+    public void updateMsg(int num,String newMsg){
+        buildings[num].setMessage(newMsg);
     }
 
     /**
