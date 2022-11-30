@@ -11,10 +11,21 @@ public class UserService {
 
     public R register(Person person) throws IOException, ClassNotFoundException {
         userDao.load();
+        //先检查person是否合法
+        //账户名必须是小写开头，并且全都是小写
+        String account = person.account;
+        for(int i = 0; i < account.length();i++){
+            if(account.charAt(i) < 'a' || account.charAt(i) > 'z') return R.error("账户名格式错误");
+        }
+        //密码必须大于等于6位
+        if(person.password!=null && person.password.length() < 6){
+            return R.error("密码长度必须大于6位");
+        }
         //如果已经有该account注册的用户，返回false
         if(userDao.query(person.account) != null){
             return R.error("该用户已经被注册");
         }
+
         //添加用户
         userDao.add(person);
         userDao.dump();

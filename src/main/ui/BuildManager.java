@@ -4,6 +4,7 @@ import main.common.R;
 import main.controller.BuildController;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.io.IOException;
 
@@ -52,13 +53,12 @@ public class BuildManager {
 
     private BuildController buildController = new BuildController();
     private int num = -1;//默认不查询
-
+    private JButton cancel = new JButton("不改了");
     public BuildManager (){
         //设置窗体的位置及大小
-        jFrame.setSize(450,600);
+        jFrame.setSize(600,600);
         jFrame.setLocationRelativeTo(null);//在屏幕中居中显示
         jFrame.add(jPanel);//添加面板
-        jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);//点击X号关闭
         placeComponents(jPanel);
         jFrame.setVisible(true);
     }
@@ -71,16 +71,26 @@ public class BuildManager {
         jTextArea.setEditable(false);
         jPanel.add(jTextArea);
         //“请输入景点编号”
-        jLabel.setBounds(170,10,200,50);
+        jLabel.setBounds(170,10,400,50);
+        jLabel.setFont(new Font("宋体",Font.BOLD,20));
         jPanel.add(jLabel);
         //景点代号输入框
         jTextField.setBounds(170,80,50,50);
+        jTextField.setFont(new Font("宋体",Font.BOLD,20));
         jPanel.add(jTextField);
-        jButton.setBounds(250,100,100,20);
+        jButton.setBounds(250,90,100,40);
+        jButton.setFont(new Font("宋体",Font.BOLD,20));
         jButton.addActionListener(new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 //获取景点编号输入框的内容，并将其转化为int
+                String str = jTextField.getText();
+                for(int i = 0;i < str.length();i++){
+                    if(str.charAt(i) < '0' || str.charAt(i) >'9'){
+                        JOptionPane.showMessageDialog(null,"编号格式错误","Something Wrong",JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+                }
                 num = Integer.parseInt(jTextField.getText());
                 String msg = null;
                 try {
@@ -89,20 +99,32 @@ public class BuildManager {
                     ioException.printStackTrace();
                 }
                 if(msg.equals("请输入正确的编号")){
-                    //TODO：输入正确的编号
-                    System.out.println("请输入正确的编号");
+                    JOptionPane.showMessageDialog(null,msg,"Something Wrong",JOptionPane.ERROR_MESSAGE);
                 }else{
                     //将查询到的信息输入到建筑物消息框中
                     buildMes.setText(msg);
                 }
+                jTextField.setEditable(false);
             }
         });
         jPanel.add(jButton);
+        cancel.setBounds(360,90,100,40);
+        cancel.setFont(new Font("宋体",Font.BOLD,20));
+        cancel.addActionListener(new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                jTextField.setEditable(true);
+                buildMes.setText("");
+            }
+        });
+        jPanel.add(cancel);
         //景点信息
-        buildMes.setBounds(170,150,250,150);
+        buildMes.setBounds(170,150,350,150);
+        buildMes.setFont(new Font("宋体",Font.BOLD,20));
         jPanel.add(buildMes);
         //确定修改按钮
-        sure.setBounds(220,320,150,20);
+        sure.setBounds(220,320,150,40);
+        sure.setFont(new Font("宋体",Font.BOLD,20));
         sure.addActionListener(new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -114,25 +136,20 @@ public class BuildManager {
                 } catch (IOException ioException) {
                     ioException.printStackTrace();
                 }
-                if(r.getCode() == 0){
-                    //TODO:修改景点信息失败
-                    System.out.println("修改失败");
+                if(r.getCode() == 0) {
+                    JOptionPane.showMessageDialog(null, r.getMsg(), "Something Wrong", JOptionPane.ERROR_MESSAGE);
                 }else{
-                    //TODO：修改景点信息成功
-                    System.out.println("修改成功");
+                    try {
+                        buildMes.setText(buildController.getBuildingMessage(newNum).getMsg());
+                    } catch (IOException | ClassNotFoundException ioException) {
+                        ioException.printStackTrace();
+                    }
                 }
-                try {
-                    buildMes.setText(buildController.getBuildingMessage(newNum).getMsg());
-                } catch (IOException | ClassNotFoundException ioException) {
-                    ioException.printStackTrace();
-                }
+
             }
         });
         jPanel.add(sure);
     }
 
-    public static void main(String[] args) {
-        new BuildManager();
-    }
 
 }

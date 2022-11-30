@@ -2,9 +2,11 @@ package main.ui;
 
 import main.common.R;
 import main.controller.UserController;
+import main.dao.BuildDao;
 import main.entity.Person;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.io.IOException;
 
@@ -20,7 +22,7 @@ public class Login {
     private JTextArea jTextArea = new JTextArea("备注：账户名字母开头，仅支持小写\r\n密码必须为6位及以上\r\n");
 
     private UserController userController = new UserController();
-    public Login() throws IOException, ClassNotFoundException {
+    public Login()  {
 
         //设置窗体的位置及大小
         frame.setSize(600,500);
@@ -35,20 +37,25 @@ public class Login {
         panel.setLayout(null);
 
         //创建userJLabel
-        userLabel.setBounds(60,60,120,25);
+        userLabel.setBounds(60,60,200,25);
+        userLabel.setFont(new Font("宋体",Font.BOLD,20));
         panel.add(userLabel);
         //创建文本域供用户输入
-        userText.setBounds(210,60,165,25);
+        userText.setBounds(250,60,165,25);
+        userText.setFont(new Font("宋体",Font.BOLD,24));
         panel.add(userText);
 
         //创建passJLabel
-        passLabel.setBounds(60,100,120,25);
+        passLabel.setBounds(60,100,200,25);
+        passLabel.setFont(new Font("宋体",Font.BOLD,20));
         panel.add(passLabel);
         //创建密码输入框
-        passText.setBounds(210,100,165,25);
+        passText.setBounds(250,100,165,25);
+        passText.setFont(new Font("宋体",Font.BOLD,24));
         panel.add(passText);
         //创建登陆注册按钮
-        loginButton.setBounds(60,200,80,25);
+        loginButton.setBounds(60,200,150,30);
+        loginButton.setFont(new Font("宋体",Font.BOLD,24));
         //登录按钮逻辑
         loginButton.addActionListener(new AbstractAction() {
             @Override
@@ -65,27 +72,23 @@ public class Login {
                 }
                 //登录成功
                 if(r.getCode() == 1){
-                    //TODO:进入新界面
                     System.out.println("登录成功");
                     if(person.account .equals("root")){
-                        //TODO:root用户，进入地图修改界面
+                        //root用户，进入管理界面
+                        new BuildManager();
                     }else{
-                        //TODO:非root用户，进入地图查看界面
+                        //非root用户，进入地图界面
+                        new Map();
                     }
                 //登陆失败
                 }else{
-                    if(r.getMsg().equals("密码错误")){
-                        //TODO：创建新界面，告知密码错误
-                        System.out.println("密码错误");
-                    }else{
-                        //TODO:创建新界面，告知用户名不存在
-                        System.out.println("用户名不存在");
-                    }
+                    JOptionPane.showMessageDialog(null,r.getMsg(),"Something Wrong",JOptionPane.ERROR_MESSAGE);
                 }
             }
         });
         panel.add(loginButton);
-        registerButton.setBounds(220,200,80,25);
+        registerButton.setBounds(220,200,150,30);
+        registerButton.setFont(new Font("宋体",Font.BOLD,20));
         //注册按钮逻辑
         registerButton.addActionListener(new AbstractAction() {
             @Override
@@ -93,15 +96,10 @@ public class Login {
                 Person person = new Person(userText.getText(), passText.getText());
                 try {
                     R r= userController.register(person);
-                    if(r.getMsg().equals("禁止注册超级管理员")){
-                        //TODO:禁止注册超级管理员
-                        System.out.println("禁止注册超级管理员");
-                    }else if(r.getMsg().equals("该用户已经被注册")){
-                        //TODO:该用户已经被注册
-                        System.out.println("该用户已经被注册");
+                    if(r.getCode() == 1){
+                        JOptionPane.showMessageDialog(null,"注册成功","Success",1);
                     }else{
-                        //TODO：注册成功
-                        System.out.println("注册成功");
+                        JOptionPane.showMessageDialog(null,r.getMsg(),"Something Wrong",0);
                     }
                 } catch (IOException | ClassNotFoundException ioException) {
                     ioException.printStackTrace();
@@ -111,7 +109,8 @@ public class Login {
         panel.add(registerButton);
 
         //将备注信息填入左下角
-        jTextArea.setBounds(60,300,200,100);
+        jTextArea.setBounds(60,300,400,75);
+        jTextArea.setFont(new Font("宋体",Font.BOLD,24));
         panel.add(jTextArea);
 
 

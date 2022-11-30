@@ -1,7 +1,7 @@
 package test;
 
 import main.dao.UserDao;
-import main.dao.userHelper.HashTab;
+import main.entity.userHelper.HashTab;
 import main.entity.Person;
 import org.junit.Test;
 
