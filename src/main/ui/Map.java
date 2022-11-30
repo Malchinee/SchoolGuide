@@ -1,8 +1,8 @@
 package main.ui;
 
 import main.common.MyButton;
+import main.common.R;
 import main.controller.BuildController;
-import main.dao.buildHelper.Graph;
 import main.entity.Building;
 
 import javax.swing.*;
@@ -67,7 +67,6 @@ public class Map {
         jFrame.setLocationRelativeTo(null);//在屏幕中居中显示
         jFrame.add(jPanel);
         jPanel.setLayout(null);
-        jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);//点击X号关闭
         placeComponents();
         jFrame.setVisible(true);
     }
@@ -97,8 +96,10 @@ public class Map {
         JButton allButton = new JButton("查询两点所有路径");
         JTextArea jTextArea = new JTextArea();
         JLabel vexAll = new JLabel("请输入要查询的所有景点的编号：（空格隔开）");
+        JLabel add = new JLabel("第一个编号为起点，第二个编号为终点");
         JTextField jTextField = new JTextField();
         JButton button = new JButton("查询多个景点之间的路径");
+        JLabel path = new JLabel("路径查询信息如下：");
 
         vex1.setBounds(1000,400,350,40);
         vex1.setFont(new Font("宋体",Font.BOLD,20));
@@ -114,18 +115,82 @@ public class Map {
         minButton.setFont(new Font("宋体",Font.BOLD,20));
         allButton.setFont(new Font("宋体",Font.BOLD,20));
 
+        minButton.addActionListener(new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String str1 = vex1Text.getText();
+                String str2 = vex2Text.getText();
+                try {
+                    R r = buildController.queryMinPath(str1,str2);
+                    if(r.getCode() == 0){
+                        JOptionPane.showMessageDialog(null,r.getMsg(),"Something Wrong",JOptionPane.ERROR_MESSAGE);
+                    }else{
+                        jTextArea.setText(r.getMsg());
+                    }
+                } catch (IOException | ClassNotFoundException ioException) {
+                    ioException.printStackTrace();
+                }
+            }
+        });
+        allButton.addActionListener(new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String str1 = vex1Text.getText();
+                String str2 = vex2Text.getText();
+                try {
+                    R r = buildController.queryAllPath(str1,str2);
+                    if(r.getCode() == 0) {
+                        JOptionPane.showMessageDialog(null,r.getMsg(),"Something Wrong",JOptionPane.ERROR_MESSAGE);
+                    }else{
+                        jTextArea.setText(r.getMsg());
+                    }
+                } catch (IOException | ClassNotFoundException ioException) {
+                    ioException.printStackTrace();
+                }
+            }
+        });
+
         jTextArea.setEditable(false);
         jTextArea.setWrapStyleWord(true);
         jTextArea.setLineWrap(true);
-        jTextArea.setBounds(1450,400,450,500);
+        jTextArea.setBounds(1450,45,450,900);
         jTextArea.setFont(new Font("宋体",Font.BOLD,20));
+        JScrollPane scrollPane = new JScrollPane(jTextArea);
+        scrollPane.setBounds(1900,400,30,500);
+        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+
+
 
         vexAll.setBounds(1000,700,450,40);
         vexAll.setFont(new Font("宋体",Font.BOLD,20));
-        jTextField.setBounds(1000,750,400,40);
+        add.setBounds(1000,750,700,40);
+        add.setFont(new Font("宋体",Font.BOLD,20));
+
+        jTextField.setBounds(1000,800,400,40);
         jTextField.setFont(new Font("宋体",Font.BOLD,20));
-        button.setBounds(1000,800,400,50);
+        button.setBounds(1000,850,400,50);
         button.setFont(new Font("宋体",Font.BOLD,20));
+        button.addActionListener(new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String str = jTextField.getText();
+                try {
+                    buildController.queryMore(str);
+                    R r = buildController.queryMore(str);
+                    if(r.getCode() == 1){
+                        jTextArea.setText(r.getMsg());
+                    }else{
+                        JOptionPane.showMessageDialog(null,r.getMsg(),"Something Wrong",JOptionPane.ERROR_MESSAGE);
+                    }
+                } catch (IOException | ClassNotFoundException ioException) {
+                    ioException.printStackTrace();
+                }
+
+            }
+        });
+        path.setBounds(1450,5,450,30);
+        path.setFont(new Font("宋体",Font.BOLD,25));
 
         jPanel.add(vex1);
         jPanel.add(vex2);
@@ -137,7 +202,9 @@ public class Map {
         jPanel.add(vexAll);
         jPanel.add(button);
         jPanel.add(jTextField);
-
+        jPanel.add(scrollPane);
+        jPanel.add(path);
+        jPanel.add(add);
 
     }
     private void setBuild(){
@@ -206,7 +273,6 @@ public class Map {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     num = finalI;
-                    System.out.println(num);
                     try {
                         Building build = buildController.queryBuild(num);
                         idText.setText(String.valueOf(build.getNo()));
@@ -222,7 +288,5 @@ public class Map {
             jPanel.add(list.get(i-1));
         }
     }
-    public static void main(String[] args) {
-        new Map();
-    }
+
 }

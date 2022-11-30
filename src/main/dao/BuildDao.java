@@ -1,10 +1,11 @@
 package main.dao;
 
 import main.common.R;
-import main.dao.buildHelper.Graph;
+import main.entity.buildHelper.Graph;
 import main.entity.Building;
 
 import java.io.*;
+import java.util.List;
 
 public class BuildDao {
     private static Graph graph;
@@ -60,7 +61,15 @@ public class BuildDao {
         return R.success("更新成功");
     }
 
-    public R queryMinPath(int sNum, int eNum){
+    public R queryMinPath(int sNum, int eNum) {
         return R.success(graph.Shortpath_Print(sNum,eNum));
+    }
+
+    public R queryAllPath(int sNum,int eNum){
+        return R.success(graph.Allpath_Print(sNum,eNum));
+    }
+
+    public R queryMore(List<Integer> list){
+        return graph.BestPath(list);
     }
 }

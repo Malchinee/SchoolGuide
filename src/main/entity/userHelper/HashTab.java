@@ -1,4 +1,4 @@
-package main.dao.userHelper;
+package main.entity.userHelper;
 
 import main.entity.Person;
 

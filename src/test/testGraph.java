@@ -1,8 +1,7 @@
 package test;
 
-import main.controller.BuildController;
 import main.dao.BuildDao;
-import main.dao.buildHelper.Graph;
+import main.entity.buildHelper.Graph;
 import main.entity.Building;
 import org.junit.Test;
 
@@ -114,10 +113,28 @@ public class testGraph {
     }
 
     @Test
-    public void testSortPath() throws IOException, ClassNotFoundException {
+    public void testShortPath() throws IOException, ClassNotFoundException {
         BuildDao buildDao = new BuildDao();
         buildDao.load();
         BuildDao.getGraph().list();
-        System.out.println(buildDao.queryMinPath(11,13));
+        System.out.println(buildDao.queryMinPath(18,3).getMsg());
+    }
+
+    @Test
+    public void testAllPath() throws IOException, ClassNotFoundException {
+        BuildDao buildDao = new BuildDao();
+        buildDao.load();
+        System.out.println(buildDao.queryAllPath(18,3).getMsg());
+    }
+
+    @Test
+    public void testMore() throws IOException, ClassNotFoundException {
+        BuildDao buildDao = new BuildDao();
+        buildDao.load();
+        List<Integer> list = new ArrayList<>();
+        list.add(1);
+        list.add(5);
+        list.add(6);
+        System.out.println(buildDao.queryMore(list).getMsg());
     }
 }
