@@ -70,9 +70,9 @@ public class Graph implements Serializable {
                 if (i != j && dist[i][j] != INFINALITY) path[i][j] = i;
                 else path[i][j] = -1;                                  /*代表当前两点不可达*/
             }
-        for (k = 0; k < getBuildingsNum(); k++)                                /*递推求解每两景点的最短路径*/
-            for (i = 0; i < getBuildingsNum(); i++)
-                for (j = 0; j < getBuildingsNum(); j++)                        /*更新dist[i][j]的值*/
+        for (k = 0; k < buildingsNum; k++)                                /*递推求解每两景点的最短路径*/
+            for (i = 0; i < buildingsNum; i++)
+                for (j = 0; j < buildingsNum; j++)                        /*更新dist[i][j]的值*/
                     if (dist[i][j] >(dist[i][k] + dist[k][j])) {
                         dist[i][j] = dist[i][k] + dist[k][j];
                         path[i][j] = k;                                /*path用于记录最短路径上的经结点*/
@@ -90,7 +90,7 @@ public class Graph implements Serializable {
             return a;
         else {
             String b = Floyd_Print(sNum, path[sNum][eNum]);                 /*将中间点作为终点继续打印路径*/
-            a = (getBuildings()[path[sNum][eNum]].getBuildName()+"->");
+            a = (buildings[path[sNum][eNum]].getBuildName()+"->");
             String c = Floyd_Print(path[sNum][eNum], eNum);                 /*将中间点作为起点继续打印路径*/
             return b+a+c;
         }
@@ -130,18 +130,18 @@ public class Graph implements Serializable {
         int dis = 0;                                                              /*用于记录路径长度*/
         pathStack[top++] = sNum;                                                    /*将本趟起点入栈*/
         visited[sNum] = 1;                                                        /*将入栈点标记为已入栈*/
-        for (int i = 0; i < getBuildingsNum(); i++) {
-            if (getEdges()[sNum][i] != INFINALITY && visited[i] != 1) {
+        for (int i = 0; i < buildingsNum; i++) {
+            if (edges[sNum][i] != INFINALITY && visited[i] != 1) {
                 /*表明前一个入栈点与该点可达，且该点未入栈（未被访问）*/
                 if (i == eNum) {                                                  /*如果深度遍历搜到了终点，就输出刚才的路径*/
                     routeInfo = routeInfo+("第"+(count++)+"条路:")+"\n";
                     for (int j = 0; j < top; j++) {
-                        routeInfo = routeInfo+(getBuildings()[pathStack[j]].getBuildName()+"->");
+                        routeInfo = routeInfo+(buildings[pathStack[j]].getBuildName()+"->");
                         if (j < top - 1)
-                            dis = dis + getEdges()[pathStack[j]][pathStack[j + 1]];        /*统计路径长度*/
+                            dis = dis + edges[pathStack[j]][pathStack[j + 1]];        /*统计路径长度*/
                     }
-                    dis = dis + getEdges()[pathStack[top - 1]][eNum];                      /*最后一条路单独出来，因为enum不能入栈*/
-                    routeInfo = routeInfo+( getBuildings()[eNum].getBuildName())+"\n";
+                    dis = dis + edges[pathStack[top - 1]][eNum];                      /*最后一条路单独出来，因为enum不能入栈*/
+                    routeInfo = routeInfo+( buildings[eNum].getBuildName())+"\n";
                     routeInfo = routeInfo+("总长度是："+ dis+"\n");
                 }
                 else {
@@ -170,8 +170,8 @@ public class Graph implements Serializable {
         resetRouteInfo();
         ShortPath();
         int d = 0;                                                        /*统计全程总长*/
-        int vNum[] = new int[getBuildingsNum()];
-        if(list.size() > getBuildingsNum()){
+        int vNum[] = new int[buildingsNum];
+        if(list.size() > buildingsNum){
             return R.error("输入景点超出最大数目");
         }
 
@@ -181,7 +181,7 @@ public class Graph implements Serializable {
             if(judgeInput(vNum,j)){
                 return R.error("景点重复");
             }
-            if((list.get(j) <= 0 || list.get(j) > getBuildingsNum())){
+            if((list.get(j) <= 0 || list.get(j) > buildingsNum)){
                 return R.error("景点输入错误");
             }
         }
@@ -189,15 +189,15 @@ public class Graph implements Serializable {
         routeInfo = routeInfo + ("这是最佳访问路径："+"\n");
 
         int i = 0;
-        for (;(i+1) < getBuildingsNum() && vNum[i] > 0 && vNum[i + 1] > 0; i++) {
-            routeInfo = routeInfo + (getBuildings()[vNum[i] - 1].getBuildName()+"->");
+        for (;(i+1) < buildingsNum && vNum[i] > 0 && vNum[i + 1] > 0; i++) {
+            routeInfo = routeInfo + (buildings[vNum[i] - 1].getBuildName()+"->");
             /*输出路径上的起点*/
             String b = Floyd_Print(vNum[i] - 1, vNum[i + 1] - 1);                /*利用Floyd算法*/
             routeInfo = routeInfo+b;
             d += dist[vNum[i] - 1][vNum[i + 1] - 1];
         }
 
-        routeInfo = routeInfo+getBuildings()[vNum[list.size()-1]-1].getBuildName();
+        routeInfo = routeInfo+buildings[vNum[list.size()-1]-1].getBuildName();
 
         routeInfo = routeInfo+("\n"+"全程总长为："+ d);
 
@@ -211,50 +211,6 @@ public class Graph implements Serializable {
         return false;
     }
 
-
-    public Building[] getBuildings() {
-        return buildings;
-    }
-
-    public void setBuildings(Building[] buildings) {
-        this.buildings = buildings;
-    }
-
-    public int[][] getEdges() {
-        return edges;
-    }
-
-    public void setEdges(int[][] edges) {
-        this.edges = edges;
-    }
-
-    public int getINFINALITY() {
-        return INFINALITY;
-    }
-
-    public int getBuildingsNum() {
-        return buildingsNum;
-    }
-
-    public void setBuildingsNum(int buildingsNum) {
-        this.buildingsNum = buildingsNum;
-    }
-
-    public int[][] getDist() {
-        return dist;
-    }
-
-    public void setDist(int[][] dist) {
-        this.dist = dist;
-    }
-
-    public int[][] getPath() {
-        return path;
-    }
-
-    public void setPath(int[][] path) {
-        this.path = path;
-    }
 
 
     /**

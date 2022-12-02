@@ -156,7 +156,7 @@ public class Map {
         jTextArea.setBounds(1450,45,450,900);
         jTextArea.setFont(new Font("宋体",Font.BOLD,20));
         JScrollPane scrollPane = new JScrollPane(jTextArea);
-        scrollPane.setBounds(1900,400,30,500);
+        scrollPane.setBounds(1900,45,30,900);
         scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 
